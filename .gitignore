@@ -1,0 +1,13 @@
+.env
+__pycache__/
+*.pyc
+node_modules/
+model_cache/
+postgres_data/
+redis_data/
+*.egg-info/
+dist/
+build/
+.mypy_cache/
+.pytest_cache/
+*.log
