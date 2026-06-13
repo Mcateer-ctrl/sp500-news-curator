@@ -128,6 +128,38 @@ export interface HealthLLMResponse {
   error: string | null
 }
 
+export interface AlertRuleItem {
+  id: number
+  ticker: string | null
+  rule_type: string
+  threshold: number
+  channel: string
+  enabled: boolean
+  last_triggered_at: string | null
+  created_at: string
+}
+
+export interface AlertRulesResponse {
+  rules: AlertRuleItem[]
+}
+
+export interface NotificationItem {
+  id: number
+  title: string
+  body: string
+  ticker: string | null
+  notification_type: string
+  channel: string
+  status: string
+  read_at: string | null
+  created_at: string
+}
+
+export interface NotificationsResponse {
+  notifications: NotificationItem[]
+}
+
+
 export const fetchArticles = async (params: {
   ticker?: string
   sentiment?: string
@@ -213,4 +245,67 @@ export const fetchIndicators = async (
   return data
 }
 
+
+export const fetchAlertRules = async (): Promise<AlertRulesResponse> => {
+  const { data } = await client.get("/alerts/rules")
+  return data
+}
+
+export const createAlertRule = async (body: {
+  ticker?: string | null
+  rule_type: string
+  threshold: number
+  channel?: string
+}) => {
+  const { data } = await client.post("/alerts/rules", body)
+  return data
+}
+
+export const updateAlertRule = async (id: number, body: {
+  ticker?: string | null
+  threshold?: number
+  channel?: string
+  enabled?: boolean
+}) => {
+  const { data } = await client.put(`/alerts/rules/${id}`, body)
+  return data
+}
+
+export const deleteAlertRule = async (id: number) => {
+  const { data } = await client.delete(`/alerts/rules/${id}`)
+  return data
+}
+
+export const fetchNotifications = async (unread: boolean = true): Promise<NotificationsResponse> => {
+  const { data } = await client.get("/alerts/notifications", { params: { unread: unread ? "true" : "false" } })
+  return data
+}
+
+export const markNotificationRead = async (id: number) => {
+  const { data } = await client.put(`/alerts/notifications/${id}/read`)
+  return data
+}
+
+export const markAllNotificationsRead = async () => {
+  const { data } = await client.post("/alerts/notifications/read-all")
+  return data
+}
+
+export const subscribePush = async (subscription: {
+  endpoint: string
+  p256dh_key: string
+  auth_key: string
+}) => {
+  const { data } = await client.post("/alerts/push/subscribe", subscription)
+  return data
+}
+
+export const unsubscribePush = async (subscription: {
+  endpoint: string
+  p256dh_key: string
+  auth_key: string
+}) => {
+  const { data } = await client.delete("/alerts/push/subscribe", { data: subscription })
+  return data
+}
 export default client
