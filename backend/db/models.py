@@ -73,3 +73,58 @@ class WatchlistItem(Base):
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), default=lambda: datetime.now(timezone.utc)
     )
+
+
+class SentimentHistory(Base):
+    """Aggregated daily sentiment data for a ticker."""
+
+    __tablename__ = "sentiment_history"
+    __table_args__ = (UniqueConstraint("ticker", "date", name="uq_ticker_date"),)
+
+    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+    ticker: Mapped[str] = mapped_column(String(10), nullable=False)
+    date: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
+    bullish_count: Mapped[int] = mapped_column(default=0)
+    bearish_count: Mapped[int] = mapped_column(default=0)
+    neutral_count: Mapped[int] = mapped_column(default=0)
+    total_articles: Mapped[int] = mapped_column(default=0)
+    avg_confidence: Mapped[float] = mapped_column(Float, default=0.0)
+    composite_score: Mapped[float] = mapped_column(Float, default=0.0)
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), default=lambda: datetime.now(timezone.utc)
+    )
+
+
+class EarningsReport(Base):
+    """Corporate earnings report data."""
+
+    __tablename__ = "earnings_reports"
+
+    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+    ticker: Mapped[str] = mapped_column(String(10), nullable=False, index=True)
+    fiscal_quarter: Mapped[str | None] = mapped_column(String(20), nullable=True)
+    eps_estimate: Mapped[float | None] = mapped_column(Float, nullable=True)
+    eps_actual: Mapped[float | None] = mapped_column(Float, nullable=True)
+    revenue_estimate: Mapped[float | None] = mapped_column(Float, nullable=True)
+    revenue_actual: Mapped[float | None] = mapped_column(Float, nullable=True)
+    report_date: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False, index=True)
+    report_time: Mapped[str | None] = mapped_column(String(10), nullable=True)
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), default=lambda: datetime.now(timezone.utc)
+    )
+
+
+class EconomicIndicator(Base):
+    """Macroeconomic indicator data point."""
+
+    __tablename__ = "economic_indicators"
+
+    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+    indicator_name: Mapped[str] = mapped_column(String(50), nullable=False, index=True)
+    value: Mapped[float] = mapped_column(Float, nullable=False)
+    previous_value: Mapped[float | None] = mapped_column(Float, nullable=True)
+    date: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False, index=True)
+    source: Mapped[str] = mapped_column(String(50), nullable=False, default="fred")
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), default=lambda: datetime.now(timezone.utc)
+    )
