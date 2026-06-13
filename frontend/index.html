@@ -1,12 +1,29 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>S&P 500 News Sentiment Curator</title>
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/geist@1.3.0/dist/fonts/geist-sans/GeistVariable.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin="anonymous"
+      rel="preload"
+    />
+    <style>
+      @font-face {
+        font-family: 'Geist';
+        src: url('https://cdn.jsdelivr.net/npm/geist@1.3.0/dist/fonts/geist-sans/GeistVariable.woff2') format('woff2');
+        font-weight: 100 900;
+        font-style: normal;
+        font-display: swap;
+      }
+    </style>
   </head>
-  <body class="bg-gray-50 text-gray-900">
+  <body class="bg-[#fafaf9] text-[#1c1917] font-sans antialiased">
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
