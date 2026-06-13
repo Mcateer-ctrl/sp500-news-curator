@@ -1,17 +1,20 @@
-"""Scheduler — APScheduler jobs for periodic ingestion and scoring."""
+﻿"""Scheduler — APScheduler jobs for periodic ingestion and scoring."""
 
 import logging
 
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from sqlalchemy import select
 
+from analysis.sentiment_aggregator import aggregate_daily_sentiment
+from analysis.sentiment_pipeline import process_batch
 from config import settings
 from db.database import async_session
-from db.models import Article, ScoredArticle
+from db.models import Article, ScoredArticle, WatchlistItem
+from ingestion.earnings import fetch_earnings, store_earnings
+from ingestion.indicators import fetch_all_indicators, store_indicators
 from ingestion.news_api import fetch_newsapi_articles
 from ingestion.rss_feeds import fetch_rss_articles
 from ingestion.sec_edgar import fetch_sec_filings
-from analysis.sentiment_pipeline import process_batch
 
 logger = logging.getLogger(__name__)
 
@@ -116,6 +119,26 @@ async def process_unscored_articles() -> int:
     return len(scored)
 
 
+async def _ingest_earnings():
+    async with async_session() as session:
+        result = await session.execute(select(WatchlistItem.ticker))
+        tickers = [row[0] for row in result.all()]
+    if not tickers:
+        logger.info("No watchlist tickers — skipping earnings fetch")
+        return
+    reports = await fetch_earnings(tickers)
+    await store_earnings(reports)
+
+
+async def _ingest_indicators():
+    indicators = await fetch_all_indicators()
+    await store_indicators(indicators)
+
+
+async def _aggregate_sentiment():
+    await aggregate_daily_sentiment()
+
+
 def start_scheduler() -> None:
     """Register and start the APScheduler jobs."""
     scheduler.add_job(
@@ -130,6 +153,28 @@ def start_scheduler() -> None:
         "interval",
         minutes=5,
         id="process_unscored_articles",
+        replace_existing=True,
+    )
+    scheduler.add_job(
+        _ingest_earnings,
+        "interval",
+        hours=6,
+        id="ingest_earnings",
+        replace_existing=True,
+    )
+    scheduler.add_job(
+        _ingest_indicators,
+        "interval",
+        hours=6,
+        id="ingest_indicators",
+        replace_existing=True,
+    )
+    scheduler.add_job(
+        _aggregate_sentiment,
+        "cron",
+        hour=0,
+        minute=30,
+        id="aggregate_daily_sentiment",
         replace_existing=True,
     )
     scheduler.start()
