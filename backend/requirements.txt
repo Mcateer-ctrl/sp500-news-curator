@@ -19,3 +19,4 @@ python-multipart>=0.0.9
 
 yfinance>=0.2.40
 fredapi>=0.5.2
+pywebpush>=1.14.0

@@ -27,6 +27,19 @@ class Settings(BaseSettings):
 
     # Financial data
     fred_api_key: str = ""
+    # Email (Gmail SMTP)
+    smtp_enabled: bool = False
+    smtp_host: str = "smtp.gmail.com"
+    smtp_port: int = 587
+    smtp_user: str = ""
+    smtp_password: str = ""
+    email_from: str = ""
+    email_to: str = ""
+
+    # Web Push (VAPID)
+    vapid_private_key: str = ""
+    vapid_public_key: str = ""
+    vapid_subject: str = "mailto:alerts@localhost"
 
     # FinBERT
     finbert_model: str = "ProsusAI/finbert"
