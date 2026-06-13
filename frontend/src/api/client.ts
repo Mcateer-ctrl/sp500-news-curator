@@ -1,4 +1,4 @@
-import axios from 'axios'
+﻿import axios from 'axios'
 
 const client = axios.create({
   baseURL: '/api',
@@ -72,6 +72,48 @@ export interface SectorSentimentResponse {
   sectors: SectorSentiment[]
 }
 
+export interface SentimentHistoryItem {
+  date: string
+  composite_score: number
+  bullish_count: number
+  bearish_count: number
+  neutral_count: number
+  total_articles: number
+  avg_confidence: number
+}
+
+export interface SentimentHistoryResponse {
+  ticker: string
+  history: SentimentHistoryItem[]
+}
+
+export interface EarningsItem {
+  id: number
+  ticker: string
+  fiscal_quarter: string | null
+  eps_estimate: number | null
+  eps_actual: number | null
+  revenue_estimate: number | null
+  revenue_actual: number | null
+  report_date: string
+  report_time: string | null
+}
+
+export interface EarningsResponse {
+  earnings: EarningsItem[]
+}
+
+export interface IndicatorValue {
+  date: string
+  value: number
+  previous_value: number | null
+  source: string
+}
+
+export interface IndicatorsResponse {
+  indicators: Record<string, IndicatorValue[]>
+}
+
 export interface HealthResponse {
   status: string
   llm_provider: string
@@ -143,6 +185,31 @@ export const fetchHealthLLM = async (): Promise<HealthLLMResponse> => {
 
 export const triggerIngestion = async () => {
   const { data } = await client.post('/ingest/trigger')
+  return data
+}
+
+export const fetchSentimentHistory = async (
+  ticker: string,
+  days: number = 30
+): Promise<SentimentHistoryResponse> => {
+  const { data } = await client.get(`/sentiment/history/${ticker}`, { params: { days } })
+  return data
+}
+
+export const fetchEarnings = async (params: {
+  ticker?: string
+  upcoming?: boolean
+  days?: number
+}): Promise<EarningsResponse> => {
+  const { data } = await client.get('/earnings', { params })
+  return data
+}
+
+export const fetchIndicators = async (
+  names: string = 'cpi,nonfarm_payrolls,unemployment_rate',
+  days: number = 90
+): Promise<IndicatorsResponse> => {
+  const { data } = await client.get('/indicators', { params: { names, days } })
   return data
 }
 
