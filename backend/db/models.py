@@ -1,4 +1,4 @@
-"""SQLAlchemy ORM models for the S&P 500 News Sentiment Curator."""
+﻿"""SQLAlchemy ORM models for the S&P 500 News Sentiment Curator."""
 
 import uuid
 from datetime import datetime, timezone
@@ -125,6 +125,53 @@ class EconomicIndicator(Base):
     previous_value: Mapped[float | None] = mapped_column(Float, nullable=True)
     date: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False, index=True)
     source: Mapped[str] = mapped_column(String(50), nullable=False, default="fred")
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), default=lambda: datetime.now(timezone.utc)
+    )
+
+
+class AlertRule(Base):
+    __tablename__ = "alert_rules"
+
+    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+    ticker: Mapped[str | None] = mapped_column(String(10), nullable=True)
+    rule_type: Mapped[str] = mapped_column(String(20), nullable=False)
+    threshold: Mapped[float] = mapped_column(Float, nullable=False)
+    channel: Mapped[str] = mapped_column(String(20), nullable=False, default="in_app")
+    enabled: Mapped[bool] = mapped_column(default=True)
+    last_triggered_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), default=lambda: datetime.now(timezone.utc)
+    )
+
+
+class Notification(Base):
+    __tablename__ = "notifications"
+
+    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+    alert_rule_id: Mapped[int | None] = mapped_column(
+        ForeignKey("alert_rules.id", ondelete="SET NULL"), nullable=True
+    )
+    title: Mapped[str] = mapped_column(String(255), nullable=False)
+    body: Mapped[str] = mapped_column(Text, nullable=False)
+    ticker: Mapped[str | None] = mapped_column(String(10), nullable=True)
+    notification_type: Mapped[str] = mapped_column(String(20), nullable=False)
+    channel: Mapped[str] = mapped_column(String(20), nullable=False)
+    status: Mapped[str] = mapped_column(String(20), nullable=False, default="pending")
+    read_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    sent_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), default=lambda: datetime.now(timezone.utc)
+    )
+
+
+class PushSubscription(Base):
+    __tablename__ = "push_subscriptions"
+
+    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+    endpoint: Mapped[str] = mapped_column(Text, unique=True, nullable=False)
+    p256dh_key: Mapped[str] = mapped_column(Text, nullable=False)
+    auth_key: Mapped[str] = mapped_column(Text, nullable=False)
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), default=lambda: datetime.now(timezone.utc)
     )
