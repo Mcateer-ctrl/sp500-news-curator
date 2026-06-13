@@ -2,8 +2,11 @@ import { useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import NewsFeed from '../components/NewsFeed'
 import SentimentChart from '../components/SentimentChart'
+import SentimentHistoryChart from '../components/SentimentHistoryChart'
 import Watchlist from '../components/Watchlist'
 import TickerFilter from '../components/TickerFilter'
+import EarningsWidget from '../components/EarningsWidget'
+import IndicatorsWidget from '../components/IndicatorsWidget'
 import { fetchWatchlist } from '../api/client'
 
 export default function Dashboard() {
@@ -19,7 +22,7 @@ export default function Dashboard() {
   return (
     <div className="p-4 lg:p-6">
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-6">
-        {/* Left column â€” Ticker filter + Watchlist */}
+        {/* Left column — Ticker filter + Watchlist */}
         <div className="lg:col-span-3 space-y-4">
           <TickerFilter
             onTickerSelect={setSelectedTicker}
@@ -32,14 +35,19 @@ export default function Dashboard() {
           />
         </div>
 
-        {/* Center column â€” News feed */}
-        <div className="lg:col-span-6">
+        {/* Center column — News feed + historical chart */}
+        <div className="lg:col-span-6 space-y-4">
           <NewsFeed selectedTicker={selectedTicker} />
+          {selectedTicker && (
+            <SentimentHistoryChart ticker={selectedTicker} />
+          )}
         </div>
 
-        {/* Right column â€” Sentiment chart */}
-        <div className="lg:col-span-3">
+        {/* Right column — Sentiment + widgets */}
+        <div className="lg:col-span-3 space-y-4">
           <SentimentChart selectedTicker={selectedTicker} />
+          <EarningsWidget tickers={tickers} />
+          <IndicatorsWidget />
         </div>
       </div>
     </div>
