@@ -1,4 +1,5 @@
-﻿import { useQuery } from '@tanstack/react-query'
+import Card from '../components/Card'
+import { useQuery } from '@tanstack/react-query'
 import { fetchHealth, fetchHealthLLM, triggerIngestion } from '../api/client'
 import { useState } from 'react'
 
@@ -38,7 +39,7 @@ export default function Settings() {
       <h1 className="text-2xl font-bold">Settings</h1>
 
       {/* System Status */}
-      <div className="bg-white rounded-lg shadow p-6">
+      <Card padding="spacious" hover={false}>
         <h2 className="text-lg font-semibold mb-4">System Status</h2>
         {healthQuery.isLoading && <p className="text-gray-400">Loading...</p>}
         {health && (
@@ -53,10 +54,10 @@ export default function Settings() {
             <dd>{health.finbert_loaded ? '\u2705 Yes' : '\u23f3 Not yet'}</dd>
           </dl>
         )}
-      </div>
+      </Card>
 
       {/* LLM Test */}
-      <div className="bg-white rounded-lg shadow p-6">
+      <Card padding="spacious" hover={false}>
         <h2 className="text-lg font-semibold mb-4">LLM Connection Test</h2>
         <button
           onClick={handleTestLLM}
@@ -89,10 +90,10 @@ export default function Settings() {
             )}
           </dl>
         )}
-      </div>
+      </Card>
 
       {/* Manual Ingestion */}
-      <div className="bg-white rounded-lg shadow p-6">
+      <Card padding="spacious" hover={false}>
         <h2 className="text-lg font-semibold mb-4">Manual Ingestion</h2>
         <button
           onClick={handleIngest}
@@ -103,10 +104,10 @@ export default function Settings() {
         {ingestResult && (
           <p className="text-sm text-gray-600 mt-2">{ingestResult}</p>
         )}
-      </div>
+      </Card>
 
       {/* Email Configuration */}
-      <div className="bg-white rounded-lg shadow p-6">
+      <Card padding="spacious" hover={false}>
         <h2 className="text-lg font-semibold mb-4">Alert Email Configuration</h2>
         <p className="text-sm text-gray-500 mb-4">
           Configure SMTP settings in your .env file to enable email alerts via Gmail.
@@ -124,7 +125,7 @@ export default function Settings() {
             </span>
           </dd>
         </dl>
-      </div>
+      </Card>
     </div>
   )
 }

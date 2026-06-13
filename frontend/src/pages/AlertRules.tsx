@@ -1,4 +1,5 @@
-﻿import { useState } from "react"
+import Card from '../components/Card'
+import { useState } from "react"
 import { useQuery, useQueryClient } from "@tanstack/react-query"
 import {
   fetchAlertRules, createAlertRule, updateAlertRule, deleteAlertRule,
@@ -72,7 +73,7 @@ export default function AlertRules() {
   return (
     <div className="max-w-4xl mx-auto p-6 space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold">Alert Rules</h1>
+        <h1 className="text-xl font-bold">Alert Rules</h1>
         <button
           onClick={openCreate}
           className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 text-sm"
@@ -88,7 +89,7 @@ export default function AlertRules() {
       )}
 
       {rules.length > 0 && (
-        <div className="bg-white rounded-lg shadow overflow-hidden">
+        <Card padding="default" hover={false}>
           <table className="w-full text-sm">
             <thead className="bg-gray-50 border-b">
               <tr>
@@ -139,7 +140,7 @@ export default function AlertRules() {
               ))}
             </tbody>
           </table>
-        </div>
+        </Card>
       )}
 
       {showModal && (
