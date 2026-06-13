@@ -9,10 +9,20 @@ import EarningsWidget from '../components/EarningsWidget'
 import IndicatorsWidget from '../components/IndicatorsWidget'
 import FedCalendarWidget from '../components/FedCalendarWidget'
 import WhalesPanel from '../components/WhalesPanel'
+import Card from '../components/Card'
 import { fetchWatchlist } from '../api/client'
+
+const RIGHT_TABS = [
+  { key: 'sentiment', label: 'Sentiment' },
+  { key: 'earnings', label: 'Earnings' },
+  { key: 'indicators', label: 'Economy' },
+  { key: 'fed', label: 'Fed' },
+  { key: 'whales', label: 'Whales' },
+] as const
 
 export default function Dashboard() {
   const [selectedTicker, setSelectedTicker] = useState<string | null>(null)
+  const [activeTab, setActiveTab] = useState<string>('sentiment')
 
   const { data: watchlistData } = useQuery({
     queryKey: ['watchlist'],
@@ -22,36 +32,70 @@ export default function Dashboard() {
   const tickers = (watchlistData?.watchlist ?? []).map((w) => w.ticker)
 
   return (
-    <div className="p-4 lg:p-6">
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-6">
-        {/* Left column — Ticker filter + Watchlist */}
-        <div className="lg:col-span-3 space-y-4">
-          <TickerFilter
-            onTickerSelect={setSelectedTicker}
-            selectedTicker={selectedTicker}
-            availableTickers={tickers}
-          />
+    <div className="px-4 lg:px-8">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 lg:gap-6">
+        {/* Left column â€” narrow sidebar */}
+        <div className="lg:col-span-3 space-y-5">
+          <Card padding="compact" hover={false}>
+            <TickerFilter
+              onTickerSelect={setSelectedTicker}
+              selectedTicker={selectedTicker}
+              availableTickers={tickers}
+            />
+          </Card>
           <Watchlist
             onTickerSelect={setSelectedTicker}
             selectedTicker={selectedTicker}
           />
         </div>
 
-        {/* Center column — News feed + historical chart */}
-        <div className="lg:col-span-6 space-y-4">
+        {/* Center column â€” NewsFeed + optional history */}
+        <div className="lg:col-span-6 space-y-5">
           <NewsFeed selectedTicker={selectedTicker} />
           {selectedTicker && (
             <SentimentHistoryChart ticker={selectedTicker} />
           )}
         </div>
 
-        {/* Right column — Sentiment + widgets */}
-        <div className="lg:col-span-3 space-y-4">
-          <SentimentChart selectedTicker={selectedTicker} />
-          <EarningsWidget tickers={tickers} />
-          <IndicatorsWidget />
-          <FedCalendarWidget />
-          <WhalesPanel />
+        {/* Right column â€” Tabbed widgets */}
+        <div className="lg:col-span-3">
+          <Card padding="default" hover={false}>
+            {/* Tab bar */}
+            <div className="flex gap-1 mb-4 bg-stone-100 rounded-xl p-1">
+              {RIGHT_TABS.map((tab) => (
+                <button
+                  key={tab.key}
+                  onClick={() => setActiveTab(tab.key)}
+                  className={`flex-1 text-xs font-medium py-1.5 px-2 rounded-[0.625rem] transition-all duration-200 ${
+                    activeTab === tab.key
+                      ? 'bg-white text-stone-800 shadow-sm'
+                      : 'text-stone-400 hover:text-stone-600'
+                  }`}
+                >
+                  {tab.label}
+                </button>
+              ))}
+            </div>
+
+            {/* Tab content */}
+            <div className="min-h-[300px]">
+              {activeTab === 'sentiment' && (
+                <SentimentChart selectedTicker={selectedTicker} />
+              )}
+              {activeTab === 'earnings' && (
+                <EarningsWidget tickers={tickers} />
+              )}
+              {activeTab === 'indicators' && (
+                <IndicatorsWidget />
+              )}
+              {activeTab === 'fed' && (
+                <FedCalendarWidget />
+              )}
+              {activeTab === 'whales' && (
+                <WhalesPanel />
+              )}
+            </div>
+          </Card>
         </div>
       </div>
     </div>
