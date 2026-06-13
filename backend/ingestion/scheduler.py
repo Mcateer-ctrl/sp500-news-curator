@@ -1,4 +1,4 @@
-﻿"""Scheduler — APScheduler jobs for periodic ingestion and scoring."""
+"""Scheduler � APScheduler jobs for periodic ingestion and scoring."""
 
 import logging
 
@@ -10,6 +10,7 @@ from analysis.sentiment_pipeline import process_batch
 from config import settings
 from db.database import async_session
 from db.models import Article, ScoredArticle, WatchlistItem
+from alerts.checker import check_alerts
 from ingestion.earnings import fetch_earnings, store_earnings
 from ingestion.indicators import fetch_all_indicators, store_indicators
 from ingestion.news_api import fetch_newsapi_articles
@@ -107,7 +108,7 @@ async def process_unscored_articles() -> int:
     if not unscored:
         return 0
 
-    logger.info("Found %d unscored articles — processing", len(unscored))
+    logger.info("Found %d unscored articles � processing", len(unscored))
     scored = await process_batch(unscored)
 
     async with async_session() as session:
@@ -124,7 +125,7 @@ async def _ingest_earnings():
         result = await session.execute(select(WatchlistItem.ticker))
         tickers = [row[0] for row in result.all()]
     if not tickers:
-        logger.info("No watchlist tickers — skipping earnings fetch")
+        logger.info("No watchlist tickers � skipping earnings fetch")
         return
     reports = await fetch_earnings(tickers)
     await store_earnings(reports)
@@ -175,6 +176,13 @@ def start_scheduler() -> None:
         hour=0,
         minute=30,
         id="aggregate_daily_sentiment",
+        replace_existing=True,
+    )
+    scheduler.add_job(
+        check_alerts,
+        "interval",
+        minutes=5,
+        id="check_alerts",
         replace_existing=True,
     )
     scheduler.start()
