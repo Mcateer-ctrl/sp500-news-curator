@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query'
+﻿import { useQuery } from '@tanstack/react-query'
 import { fetchHealth, fetchHealthLLM, triggerIngestion } from '../api/client'
 import { useState } from 'react'
 
@@ -50,7 +50,7 @@ export default function Settings() {
             <dd className="font-mono">{health.llm_provider}</dd>
 
             <dt className="text-gray-500">FinBERT Loaded</dt>
-            <dd>{health.finbert_loaded ? '✅ Yes' : '⏳ Not yet'}</dd>
+            <dd>{health.finbert_loaded ? '\u2705 Yes' : '\u23f3 Not yet'}</dd>
           </dl>
         )}
       </div>
@@ -69,7 +69,7 @@ export default function Settings() {
           <dl className="grid grid-cols-2 gap-4 text-sm mt-4">
             <dt className="text-gray-500">OK</dt>
             <dd className={llmQuery.data.ok ? 'text-green-600' : 'text-red-600'}>
-              {llmQuery.data.ok ? '✅ Yes' : '❌ No'}
+              {llmQuery.data.ok ? '\u2705 Yes' : '\u274c No'}
             </dd>
 
             <dt className="text-gray-500">Provider</dt>
@@ -103,6 +103,27 @@ export default function Settings() {
         {ingestResult && (
           <p className="text-sm text-gray-600 mt-2">{ingestResult}</p>
         )}
+      </div>
+
+      {/* Email Configuration */}
+      <div className="bg-white rounded-lg shadow p-6">
+        <h2 className="text-lg font-semibold mb-4">Alert Email Configuration</h2>
+        <p className="text-sm text-gray-500 mb-4">
+          Configure SMTP settings in your .env file to enable email alerts via Gmail.
+          Requires a Gmail App Password (2FA must be enabled).
+        </p>
+        <dl className="grid grid-cols-2 gap-4 text-sm">
+          <dt className="text-gray-500">SMTP Host</dt>
+          <dd className="font-mono">smtp.gmail.com:587</dd>
+
+          <dt className="text-gray-500">Status</dt>
+          <dd>
+            <span className="inline-flex items-center gap-1.5">
+              <span className="h-2 w-2 rounded-full bg-yellow-400" />
+              <span>Check .env to enable</span>
+            </span>
+          </dd>
+        </dl>
       </div>
     </div>
   )
