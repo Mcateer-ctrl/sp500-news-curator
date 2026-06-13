@@ -7,6 +7,8 @@ import Watchlist from '../components/Watchlist'
 import TickerFilter from '../components/TickerFilter'
 import EarningsWidget from '../components/EarningsWidget'
 import IndicatorsWidget from '../components/IndicatorsWidget'
+import FedCalendarWidget from '../components/FedCalendarWidget'
+import WhalesPanel from '../components/WhalesPanel'
 import { fetchWatchlist } from '../api/client'
 
 export default function Dashboard() {
@@ -48,6 +50,8 @@ export default function Dashboard() {
           <SentimentChart selectedTicker={selectedTicker} />
           <EarningsWidget tickers={tickers} />
           <IndicatorsWidget />
+          <FedCalendarWidget />
+          <WhalesPanel />
         </div>
       </div>
     </div>
