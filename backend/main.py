@@ -6,7 +6,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 
 from api.middleware import setup_middleware
-from api.routes import articles, health, sentiment, watchlist, earnings, indicators
+from api.routes import articles, health, sentiment, watchlist, earnings, indicators, alerts
 from db.database import engine
 from db.models import Base
 from db.seed import seed
@@ -67,6 +67,7 @@ app.include_router(sentiment.router)
 app.include_router(watchlist.router)
 app.include_router(earnings.router)
 app.include_router(indicators.router)
+app.include_router(alerts.router)
 
 
 @app.post("/ingest/trigger", tags=["ingestion"])
