@@ -1,4 +1,4 @@
-import Card from '../components/Card'
+﻿import Card from '../components/Card'
 import { useQuery } from '@tanstack/react-query'
 import { fetchHealth, fetchHealthLLM, triggerIngestion } from '../api/client'
 import { useState } from 'react'
@@ -35,7 +35,7 @@ export default function Settings() {
   const health = healthQuery.data
 
   return (
-    <div className="max-w-2xl mx-auto p-6 space-y-6">
+    <div className="max-w-2xl mx-auto px-4 py-6 space-y-6">
       <h1 className="text-2xl font-bold">Settings</h1>
 
       {/* System Status */}
@@ -61,7 +61,7 @@ export default function Settings() {
         <h2 className="text-lg font-semibold mb-4">LLM Connection Test</h2>
         <button
           onClick={handleTestLLM}
-          className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 text-sm"
+          className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 text-sm active:scale-[0.98] transition-transform duration-150"
           disabled={llmQuery.isFetching}
         >
           {llmQuery.isFetching ? 'Testing...' : 'Test LLM Connection'}
@@ -97,7 +97,7 @@ export default function Settings() {
         <h2 className="text-lg font-semibold mb-4">Manual Ingestion</h2>
         <button
           onClick={handleIngest}
-          className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 text-sm"
+          className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 text-sm active:scale-[0.98] transition-transform duration-150"
         >
           Trigger Ingestion
         </button>

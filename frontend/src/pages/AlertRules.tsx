@@ -1,4 +1,4 @@
-import Card from '../components/Card'
+﻿import Card from '../components/Card'
 import { useState } from "react"
 import { useQuery, useQueryClient } from "@tanstack/react-query"
 import {
@@ -71,12 +71,12 @@ export default function AlertRules() {
   }
 
   return (
-    <div className="max-w-4xl mx-auto p-6 space-y-6">
+    <div className="max-w-4xl mx-auto px-4 py-6 space-y-6">
       <div className="flex items-center justify-between">
         <h1 className="text-xl font-bold">Alert Rules</h1>
         <button
           onClick={openCreate}
-          className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 text-sm"
+          className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 text-sm active:scale-[0.98] transition-transform duration-150"
         >
           New Rule
         </button>
@@ -145,75 +145,77 @@ export default function AlertRules() {
 
       {showModal && (
         <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-30">
-          <div className="bg-white rounded-lg shadow-xl p-6 w-full max-w-md">
-            <h2 className="text-lg font-semibold mb-4">
-              {editingRule ? "Edit Rule" : "New Alert Rule"}
-            </h2>
+          <div className="bg-white/40 ring-1 ring-black/[0.06] rounded-[1.25rem] p-[3px] w-full max-w-md">
+            <div className="bg-white rounded-[calc(1.25rem-3px)] shadow-inner p-6">
+              <h2 className="text-lg font-semibold mb-4">
+                {editingRule ? "Edit Rule" : "New Alert Rule"}
+              </h2>
 
-            <div className="space-y-3">
-              <div>
-                <label className="block text-sm font-medium text-gray-600 mb-1">Rule Type</label>
-                <select
-                  value={form.rule_type}
-                  onChange={(e) => setForm({ ...form, rule_type: e.target.value })}
-                  className="w-full border rounded px-3 py-1.5 text-sm"
-                  disabled={!!editingRule}
+              <div className="space-y-3">
+                <div>
+                  <label className="block text-sm font-medium text-gray-600 mb-1">Rule Type</label>
+                  <select
+                    value={form.rule_type}
+                    onChange={(e) => setForm({ ...form, rule_type: e.target.value })}
+                    className="w-full border rounded px-3 py-1.5 text-sm"
+                    disabled={!!editingRule}
+                  >
+                    {RULE_TYPES.map((t) => (
+                      <option key={t} value={t}>{t}</option>
+                    ))}
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-600 mb-1">Ticker (optional)</label>
+                  <input
+                    type="text"
+                    value={form.ticker}
+                    onChange={(e) => setForm({ ...form, ticker: e.target.value.toUpperCase() })}
+                    placeholder="Leave blank for all tickers"
+                    className="w-full border rounded px-3 py-1.5 text-sm"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-600 mb-1">Threshold</label>
+                  <input
+                    type="number"
+                    step="0.01"
+                    value={form.threshold}
+                    onChange={(e) => setForm({ ...form, threshold: parseFloat(e.target.value) || 0 })}
+                    className="w-full border rounded px-3 py-1.5 text-sm"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-600 mb-1">Channel</label>
+                  <select
+                    value={form.channel}
+                    onChange={(e) => setForm({ ...form, channel: e.target.value })}
+                    className="w-full border rounded px-3 py-1.5 text-sm"
+                  >
+                    {CHANNELS.map((c) => (
+                      <option key={c} value={c}>{c}</option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+
+              <div className="flex justify-end gap-3 mt-5">
+                <button
+                  onClick={() => { setShowModal(false); resetForm() }}
+                  className="px-4 py-2 text-sm text-gray-600 hover:text-gray-800"
                 >
-                  {RULE_TYPES.map((t) => (
-                    <option key={t} value={t}>{t}</option>
-                  ))}
-                </select>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-600 mb-1">Ticker (optional)</label>
-                <input
-                  type="text"
-                  value={form.ticker}
-                  onChange={(e) => setForm({ ...form, ticker: e.target.value.toUpperCase() })}
-                  placeholder="Leave blank for all tickers"
-                  className="w-full border rounded px-3 py-1.5 text-sm"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-600 mb-1">Threshold</label>
-                <input
-                  type="number"
-                  step="0.01"
-                  value={form.threshold}
-                  onChange={(e) => setForm({ ...form, threshold: parseFloat(e.target.value) || 0 })}
-                  className="w-full border rounded px-3 py-1.5 text-sm"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-600 mb-1">Channel</label>
-                <select
-                  value={form.channel}
-                  onChange={(e) => setForm({ ...form, channel: e.target.value })}
-                  className="w-full border rounded px-3 py-1.5 text-sm"
+                  Cancel
+                </button>
+                <button
+                  onClick={handleSave}
+                  className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 text-sm"
                 >
-                  {CHANNELS.map((c) => (
-                    <option key={c} value={c}>{c}</option>
-                  ))}
-                </select>
+                  Save
+                </button>
               </div>
-            </div>
-
-            <div className="flex justify-end gap-3 mt-5">
-              <button
-                onClick={() => { setShowModal(false); resetForm() }}
-                className="px-4 py-2 text-sm text-gray-600 hover:text-gray-800"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={handleSave}
-                className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 text-sm"
-              >
-                Save
-              </button>
             </div>
           </div>
         </div>
