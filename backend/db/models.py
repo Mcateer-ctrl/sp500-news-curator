@@ -1,4 +1,4 @@
-﻿"""SQLAlchemy ORM models for the S&P 500 News Sentiment Curator."""
+"""SQLAlchemy ORM models for the S&P 500 News Sentiment Curator."""
 
 import uuid
 from datetime import datetime, timezone
@@ -125,6 +125,38 @@ class EconomicIndicator(Base):
     previous_value: Mapped[float | None] = mapped_column(Float, nullable=True)
     date: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False, index=True)
     source: Mapped[str] = mapped_column(String(50), nullable=False, default="fred")
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), default=lambda: datetime.now(timezone.utc)
+    )
+
+class Sec13FFiling(Base):
+    """SEC 13F institutional filing data."""
+
+    __tablename__ = "sec_13f_filings"
+
+    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+    ticker: Mapped[str] = mapped_column(String(10), nullable=False, index=True)
+    cik: Mapped[str | None] = mapped_column(String(20), nullable=True)
+    filing_date: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
+    period_date: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
+    shares_held: Mapped[float | None] = mapped_column(Float, nullable=True)
+    value: Mapped[float | None] = mapped_column(Float, nullable=True)
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), default=lambda: datetime.now(timezone.utc)
+    )
+
+
+class FedEvent(Base):
+    """Federal Reserve event data."""
+
+    __tablename__ = "fed_events"
+
+    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+    event_name: Mapped[str] = mapped_column(String(255), nullable=False)
+    event_date: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False, index=True)
+    event_type: Mapped[str] = mapped_column(String(30), nullable=False)
+    actual_rate: Mapped[float | None] = mapped_column(Float, nullable=True)
+    expected_rate: Mapped[float | None] = mapped_column(Float, nullable=True)
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), default=lambda: datetime.now(timezone.utc)
     )
