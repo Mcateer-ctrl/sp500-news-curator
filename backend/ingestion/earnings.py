@@ -1,5 +1,5 @@
-﻿import logging
-from datetime import datetime, timezone
+import logging
+from datetime import datetime, timezone, timedelta
 
 import yfinance as yf
 from sqlalchemy import select
@@ -60,3 +60,41 @@ async def store_earnings(reports: list[EarningsReport]) -> int:
             await session.commit()
     logger.info("Stored %d new earnings reports", inserted)
     return inserted
+
+
+async def update_earnings_actuals(session) -> int:
+    """For recently reported earnings, fetch actual results and compute surprise."""
+    result = await session.execute(
+        select(EarningsReport).where(
+            EarningsReport.report_date <= datetime.now(timezone.utc),
+            EarningsReport.report_date >= datetime.now(timezone.utc) - timedelta(days=30),
+            EarningsReport.eps_actual.is_(None),
+        )
+    )
+    recent = list(result.scalars().all())
+
+    updated = 0
+    for report in recent:
+        try:
+            tk = yf.Ticker(report.ticker)
+            cal = tk.calendar
+            if not cal:
+                continue
+            eps_actual = cal.get("EPS Actual")
+            revenue_actual = cal.get("Revenue Actual")
+            if eps_actual is not None:
+                report.eps_actual = float(eps_actual)
+                if report.eps_estimate:
+                    report.surprise_percent = round(
+                        (report.eps_actual - report.eps_estimate) / abs(report.eps_estimate) * 100, 2
+                    )
+                updated += 1
+            if revenue_actual is not None:
+                report.revenue_actual = float(revenue_actual)
+        except Exception:
+            logger.exception("Failed to update actuals for %s", report.ticker)
+
+    if updated:
+        await session.commit()
+    logger.info("Updated actuals for %d earnings reports", updated)
+    return updated

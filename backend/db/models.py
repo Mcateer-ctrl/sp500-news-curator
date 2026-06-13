@@ -107,6 +107,7 @@ class EarningsReport(Base):
     eps_actual: Mapped[float | None] = mapped_column(Float, nullable=True)
     revenue_estimate: Mapped[float | None] = mapped_column(Float, nullable=True)
     revenue_actual: Mapped[float | None] = mapped_column(Float, nullable=True)
+    surprise_percent: Mapped[float | None] = mapped_column(Float, nullable=True)
     report_date: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False, index=True)
     report_time: Mapped[str | None] = mapped_column(String(10), nullable=True)
     created_at: Mapped[datetime] = mapped_column(
