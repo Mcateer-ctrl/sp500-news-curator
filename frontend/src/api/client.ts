@@ -128,6 +128,33 @@ export interface HealthLLMResponse {
   error: string | null
 }
 
+export interface FedEventItem {
+  id: number
+  event_name: string
+  event_date: string
+  event_type: string
+  actual_rate: number | null
+  expected_rate: number | null
+}
+
+export interface FedEventsResponse {
+  events: FedEventItem[]
+}
+
+export interface ThirteenFFilingItem {
+  id: number
+  filer_name: string
+  ticker: string
+  shares: number
+  value: number | null
+  filing_date: string
+  period: string | null
+}
+
+export interface ThirteenFFilingsResponse {
+  filings: ThirteenFFilingItem[]
+}
+
 export interface AlertRuleItem {
   id: number
   ticker: string | null
@@ -157,33 +184,6 @@ export interface NotificationItem {
 
 export interface NotificationsResponse {
   notifications: NotificationItem[]
-}
-
-export interface ThirteenFFilingItem {
-  id: number
-  ticker: string
-  cik: string | null
-  filing_date: string
-  period_date: string
-  shares_held: number | null
-  value: number | null
-}
-
-export interface ThirteenFFilingsResponse {
-  filings: ThirteenFFilingItem[]
-}
-
-export interface FedEventItem {
-  id: number
-  event_name: string
-  event_date: string
-  event_type: string
-  actual_rate: number | null
-  expected_rate: number | null
-}
-
-export interface FedEventsResponse {
-  events: FedEventItem[]
 }
 
 
@@ -334,6 +334,33 @@ export const unsubscribePush = async (subscription: {
 }) => {
   const { data } = await client.delete("/alerts/push/subscribe", { data: subscription })
   return data
+}
+
+export interface ThirteenFFilingItem {
+  id: number
+  ticker: string
+  cik: string | null
+  filing_date: string
+  period_date: string
+  shares_held: number | null
+  value: number | null
+}
+
+export interface ThirteenFFilingsResponse {
+  filings: ThirteenFFilingItem[]
+}
+
+export interface FedEventItem {
+  id: number
+  event_name: string
+  event_date: string
+  event_type: string
+  actual_rate: number | null
+  expected_rate: number | null
+}
+
+export interface FedEventsResponse {
+  events: FedEventItem[]
 }
 
 export const fetchThirteenFFilings = async (params?: {
