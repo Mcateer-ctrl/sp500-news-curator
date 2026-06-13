@@ -1,4 +1,4 @@
-﻿import axios from 'axios'
+import axios from 'axios'
 
 const client = axios.create({
   baseURL: '/api',
@@ -159,6 +159,33 @@ export interface NotificationsResponse {
   notifications: NotificationItem[]
 }
 
+export interface ThirteenFFilingItem {
+  id: number
+  ticker: string
+  cik: string | null
+  filing_date: string
+  period_date: string
+  shares_held: number | null
+  value: number | null
+}
+
+export interface ThirteenFFilingsResponse {
+  filings: ThirteenFFilingItem[]
+}
+
+export interface FedEventItem {
+  id: number
+  event_name: string
+  event_date: string
+  event_type: string
+  actual_rate: number | null
+  expected_rate: number | null
+}
+
+export interface FedEventsResponse {
+  events: FedEventItem[]
+}
+
 
 export const fetchArticles = async (params: {
   ticker?: string
@@ -308,4 +335,20 @@ export const unsubscribePush = async (subscription: {
   const { data } = await client.delete("/alerts/push/subscribe", { data: subscription })
   return data
 }
+
+export const fetchThirteenFFilings = async (params?: {
+  ticker?: string
+  days?: number
+}): Promise<ThirteenFFilingsResponse> => {
+  const { data } = await client.get('/13f/filings', { params })
+  return data
+}
+
+export const fetchFedEvents = async (params?: {
+  event_type?: string
+}): Promise<FedEventsResponse> => {
+  const { data } = await client.get('/fed/events', { params })
+  return data
+}
+
 export default client
