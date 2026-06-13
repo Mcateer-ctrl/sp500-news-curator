@@ -11,11 +11,13 @@ from config import settings
 from db.database import async_session
 from db.models import Article, ScoredArticle, WatchlistItem
 from alerts.checker import check_alerts
-from ingestion.earnings import fetch_earnings, store_earnings
+from ingestion.earnings import fetch_earnings, store_earnings, update_earnings_actuals
 from ingestion.indicators import fetch_all_indicators, store_indicators
 from ingestion.news_api import fetch_newsapi_articles
 from ingestion.rss_feeds import fetch_rss_articles
 from ingestion.sec_edgar import fetch_sec_filings
+from ingestion.sec_13f import fetch_13f_filings, store_13f_filings
+from ingestion.fed_calendar import fetch_fed_events, store_fed_events
 
 logger = logging.getLogger(__name__)
 
@@ -139,6 +141,20 @@ async def _ingest_indicators():
 async def _aggregate_sentiment():
     await aggregate_daily_sentiment()
 
+async def _ingest_13f():
+    filings = await fetch_13f_filings()
+    await store_13f_filings(filings)
+
+
+async def _ingest_fed():
+    events = await fetch_fed_events()
+    await store_fed_events(events)
+
+
+async def _update_earnings_actuals():
+    async with async_session() as session:
+        await update_earnings_actuals(session)
+
 
 def start_scheduler() -> None:
     """Register and start the APScheduler jobs."""
@@ -183,6 +199,27 @@ def start_scheduler() -> None:
         "interval",
         minutes=5,
         id="check_alerts",
+        replace_existing=True,
+    )
+    scheduler.add_job(
+        _ingest_13f,
+        "interval",
+        days=7,
+        id="ingest_13f",
+        replace_existing=True,
+    )
+    scheduler.add_job(
+        _ingest_fed,
+        "interval",
+        days=7,
+        id="ingest_fed",
+        replace_existing=True,
+    )
+    scheduler.add_job(
+        _update_earnings_actuals,
+        "interval",
+        days=1,
+        id="update_earnings_actuals",
         replace_existing=True,
     )
     scheduler.start()
