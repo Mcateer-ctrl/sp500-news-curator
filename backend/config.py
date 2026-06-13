@@ -25,6 +25,9 @@ class Settings(BaseSettings):
     # News data sources
     newsapi_key: str = ""
 
+    # Financial data
+    fred_api_key: str = ""
+
     # FinBERT
     finbert_model: str = "ProsusAI/finbert"
     finbert_cache_dir: str = "/app/model_cache"
