@@ -111,7 +111,7 @@ export default function NewsFeed({ selectedTicker }: NewsFeedProps) {
               {article.summary && (
                 <button
                   onClick={() => setExpandedId(expandedId === article.id ? null : article.id)}
-                  className="text-[0.75rem] text-accent hover:text-accent-hover font-medium transition-colors duration-150"
+                  className="text-[0.75rem] text-accent hover:text-accent-hover font-medium transition-colors duration-150 active:scale-[0.98] transition-transform duration-150"
                 >
                   {expandedId === article.id ? 'Hide' : 'AI Analysis'}
                 </button>
@@ -135,7 +135,7 @@ export default function NewsFeed({ selectedTicker }: NewsFeedProps) {
       {articles.length >= limit && (
         <button
           onClick={() => setLimit((prev) => prev + 50)}
-          className="w-full py-3 text-sm text-stone-500 hover:text-stone-700 font-medium hover:bg-surface-hover rounded-2xl transition-colors duration-200"
+          className="w-full py-3 text-sm text-stone-500 hover:text-stone-700 font-medium hover:bg-surface-hover rounded-2xl transition-colors duration-200 active:scale-[0.98] transition-transform duration-150"
         >
           Load more articles
         </button>

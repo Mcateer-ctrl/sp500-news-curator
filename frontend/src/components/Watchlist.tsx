@@ -50,7 +50,7 @@ export default function Watchlist({ onTickerSelect, selectedTicker }: WatchlistP
         />
         <button
           onClick={handleAdd}
-          className="bg-blue-600 text-white px-3 py-1 rounded text-sm hover:bg-blue-700"
+          className="bg-blue-600 text-white px-3 py-1 rounded text-sm hover:bg-blue-700 active:scale-[0.98] transition-transform duration-150"
         >
           Add
         </button>
@@ -75,7 +75,7 @@ export default function Watchlist({ onTickerSelect, selectedTicker }: WatchlistP
                 e.stopPropagation()
                 handleRemove(item.ticker)
               }}
-              className="text-gray-400 hover:text-red-500 text-xs"
+              className="text-gray-400 hover:text-red-500 text-xs active:scale-[0.98] transition-transform duration-150"
             >
               x
             </button>

@@ -43,7 +43,7 @@ export default function App() {
       </nav>
 
       {/* Main content */}
-      <main className="pt-20 pb-8">
+      <main className="animate-in pt-20 pb-8">
         <Routes>
           <Route path="/" element={<Dashboard />} />
           <Route path="/alerts" element={<AlertRules />} />

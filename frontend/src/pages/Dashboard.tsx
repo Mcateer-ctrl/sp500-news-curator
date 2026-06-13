@@ -66,7 +66,7 @@ export default function Dashboard() {
                 <button
                   key={tab.key}
                   onClick={() => setActiveTab(tab.key)}
-                  className={`flex-1 text-xs font-medium py-1.5 px-2 rounded-[0.625rem] transition-all duration-200 ${
+                  className={`flex-1 text-xs font-medium py-1.5 px-2 rounded-[0.625rem] transition-all duration-200 active:scale-[0.98] ${
                     activeTab === tab.key
                       ? 'bg-white text-stone-800 shadow-sm'
                       : 'text-stone-400 hover:text-stone-600'

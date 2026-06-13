@@ -1,4 +1,4 @@
-﻿import Card from '../components/Card'
+import Card from '../components/Card'
 import { useState } from "react"
 import { useQuery, useQueryClient } from "@tanstack/react-query"
 import {
@@ -113,7 +113,7 @@ export default function AlertRules() {
                   <td className="px-4 py-3">
                     <button
                       onClick={() => handleToggle(r)}
-                      className={`text-xs px-2 py-0.5 rounded ${
+                      className={`text-xs px-2 py-0.5 rounded active:scale-[0.98] transition-transform duration-150 ${
                         r.enabled
                           ? "bg-green-100 text-green-700"
                           : "bg-gray-100 text-gray-500"
@@ -125,13 +125,13 @@ export default function AlertRules() {
                   <td className="px-4 py-3 text-right">
                     <button
                       onClick={() => openEdit(r)}
-                      className="text-blue-600 hover:text-blue-800 text-xs mr-2"
+                      className="text-blue-600 hover:text-blue-800 text-xs mr-2 active:scale-[0.98] transition-transform duration-150"
                     >
                       Edit
                     </button>
                     <button
                       onClick={() => handleDelete(r.id)}
-                      className="text-red-500 hover:text-red-700 text-xs"
+                      className="text-red-500 hover:text-red-700 text-xs active:scale-[0.98] transition-transform duration-150"
                     >
                       Delete
                     </button>
@@ -205,13 +205,13 @@ export default function AlertRules() {
               <div className="flex justify-end gap-3 mt-5">
                 <button
                   onClick={() => { setShowModal(false); resetForm() }}
-                  className="px-4 py-2 text-sm text-gray-600 hover:text-gray-800"
+                  className="px-4 py-2 text-sm text-gray-600 hover:text-gray-800 active:scale-[0.98] transition-transform duration-150"
                 >
                   Cancel
                 </button>
                 <button
                   onClick={handleSave}
-                  className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 text-sm"
+                  className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 text-sm active:scale-[0.98] transition-transform duration-150"
                 >
                   Save
                 </button>

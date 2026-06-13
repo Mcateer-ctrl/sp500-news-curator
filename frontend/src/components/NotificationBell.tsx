@@ -24,7 +24,7 @@ export default function NotificationBell() {
     <div className="relative">
       <button
         onClick={() => setOpen(!open)}
-        className="relative p-1.5 rounded-lg hover:bg-gray-100"
+        className="relative p-1.5 rounded-lg hover:bg-gray-100 active:scale-[0.98] transition-transform duration-150"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -57,7 +57,7 @@ export default function NotificationBell() {
                 {unreadCount > 0 && (
                   <button
                     onClick={handleMarkAllRead}
-                    className="text-xs text-blue-600 hover:text-blue-800"
+                    className="text-xs text-blue-600 hover:text-blue-800 active:scale-[0.98] transition-transform duration-150"
                   >
                     Mark all read
                   </button>

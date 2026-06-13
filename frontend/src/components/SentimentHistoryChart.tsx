@@ -41,7 +41,7 @@ export default function SentimentHistoryChart({ ticker }: Props) {
             <button
               key={d}
               onClick={() => setDays(d)}
-              className={px-2 py-1 rounded }
+              className={`px-2 py-1 rounded active:scale-[0.98] transition-transform duration-150 cursor-pointer ${ days === d ? 'bg-accent text-white' : 'text-stone-500 hover:text-stone-800 hover:bg-stone-100' }`}
             >
               {d}d
             </button>

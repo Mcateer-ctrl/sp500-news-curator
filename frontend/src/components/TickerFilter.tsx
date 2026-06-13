@@ -1,4 +1,4 @@
-﻿import { useState } from 'react'
+import { useState } from 'react'
 import Card from './Card'
 
 interface TickerFilterProps {
@@ -27,7 +27,7 @@ export default function TickerFilter({ onTickerSelect, selectedTicker, available
       <div className="space-y-1 max-h-64 overflow-y-auto mt-3">
         <button
           onClick={() => onTickerSelect(null)}
-          className={`block w-full text-left px-2 py-1 rounded text-[0.8125rem] ${
+          className={`block w-full text-left px-2 py-1 rounded text-[0.8125rem] active:scale-[0.98] transition-transform duration-150 ${
             !selectedTicker ? 'text-accent bg-accent-light font-semibold' : 'text-stone-600 hover:bg-surface-hover'
           }`}
         >
@@ -37,7 +37,7 @@ export default function TickerFilter({ onTickerSelect, selectedTicker, available
           <button
             key={ticker}
             onClick={() => onTickerSelect(ticker)}
-            className={`block w-full text-left px-2 py-1 rounded text-[0.8125rem] font-mono ${
+            className={`block w-full text-left px-2 py-1 rounded text-[0.8125rem] active:scale-[0.98] transition-transform duration-150 font-mono ${
               selectedTicker === ticker ? 'text-accent bg-accent-light font-semibold' : 'text-stone-600 hover:bg-surface-hover'
             }`}
           >
