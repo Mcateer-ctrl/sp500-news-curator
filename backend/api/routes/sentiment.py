@@ -8,7 +8,7 @@ from sqlalchemy import func, select, and_, case, extract
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from db.database import get_session
-from db.models import Article, ScoredArticle
+from db.models import Article, ScoredArticle, SentimentHistory
 
 router = APIRouter(prefix="/sentiment", tags=["sentiment"])
 
@@ -125,4 +125,40 @@ async def sentiment_by_sectors(
             }
             for row in rows
         ]
+    }
+
+@router.get("/history/{ticker}")
+async def sentiment_history(
+    ticker: str,
+    days: int = Query(30, ge=1, le=365),
+    session: AsyncSession = Depends(get_session),
+):
+    cutoff = datetime.now(timezone.utc) - timedelta(days=days)
+    query = (
+        select(SentimentHistory)
+        .where(
+            and_(
+                SentimentHistory.ticker == ticker.upper(),
+                SentimentHistory.date >= cutoff,
+            )
+        )
+        .order_by(SentimentHistory.date)
+    )
+    result = await session.execute(query)
+    rows = result.scalars().all()
+
+    return {
+        "ticker": ticker.upper(),
+        "history": [
+            {
+                "date": r.date.isoformat(),
+                "composite_score": r.composite_score,
+                "bullish_count": r.bullish_count,
+                "bearish_count": r.bearish_count,
+                "neutral_count": r.neutral_count,
+                "total_articles": r.total_articles,
+                "avg_confidence": r.avg_confidence,
+            }
+            for r in rows
+        ],
     }

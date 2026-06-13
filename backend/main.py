@@ -6,7 +6,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 
 from api.middleware import setup_middleware
-from api.routes import articles, health, sentiment, watchlist
+from api.routes import articles, health, sentiment, watchlist, earnings, indicators
 from db.database import engine
 from db.models import Base
 from db.seed import seed
@@ -65,6 +65,8 @@ app.include_router(health.router)
 app.include_router(articles.router)
 app.include_router(sentiment.router)
 app.include_router(watchlist.router)
+app.include_router(earnings.router)
+app.include_router(indicators.router)
 
 
 @app.post("/ingest/trigger", tags=["ingestion"])
@@ -72,3 +74,4 @@ async def trigger_ingestion():
     """Manually trigger ingestion from all sources (for dev/testing)."""
     result = await ingest_all_sources()
     return {"status": "ok", **result}
+
