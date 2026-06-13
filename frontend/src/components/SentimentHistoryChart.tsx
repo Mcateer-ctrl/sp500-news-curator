@@ -4,6 +4,7 @@ import {
   AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer,
 } from 'recharts'
 import { fetchSentimentHistory } from '../api/client'
+import Card from './Card'
 
 interface Props {
   ticker: string | null
@@ -30,7 +31,7 @@ export default function SentimentHistoryChart({ ticker }: Props) {
   }))
 
   return (
-    <div className="bg-white rounded-lg shadow p-4">
+    <Card padding="default">
       <div className="flex items-center justify-between mb-3">
         <h2 className="text-lg font-semibold">
           Sentiment Trend: <span className="font-mono text-blue-600">{ticker}</span>
@@ -49,7 +50,7 @@ export default function SentimentHistoryChart({ ticker }: Props) {
       </div>
       {query.isLoading && <p className="text-gray-400 text-sm">Loading...</p>}
       {data.length === 0 && !query.isLoading && (
-        <p className="text-gray-400 text-sm">No history data yet — check back after the daily aggregation runs</p>
+        <p className="text-gray-400 text-sm">No history data yet - check back after the daily aggregation runs</p>
       )}
       {data.length > 0 && (
         <ResponsiveContainer width="100%" height={260}>
@@ -69,6 +70,6 @@ export default function SentimentHistoryChart({ ticker }: Props) {
           </AreaChart>
         </ResponsiveContainer>
       )}
-    </div>
+    </Card>
   )
 }

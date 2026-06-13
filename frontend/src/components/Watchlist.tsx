@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query'
 import { fetchWatchlist, removeFromWatchlist, addToWatchlist, WatchlistItem } from '../api/client'
 import { useState } from 'react'
+import Card from './Card'
 
 interface WatchlistProps {
   onTickerSelect: (ticker: string | null) => void
@@ -36,7 +37,7 @@ export default function Watchlist({ onTickerSelect, selectedTicker }: WatchlistP
   const items = data?.watchlist ?? []
 
   return (
-    <div className="bg-white rounded-lg shadow p-4">
+    <Card padding="default">
       <h2 className="text-lg font-semibold mb-3">Watchlist</h2>
       <div className="flex gap-2 mb-3">
         <input
@@ -84,6 +85,6 @@ export default function Watchlist({ onTickerSelect, selectedTicker }: WatchlistP
           <p className="text-gray-400 text-sm text-center py-4">No tickers in watchlist</p>
         )}
       </div>
-    </div>
+    </Card>
   )
 }

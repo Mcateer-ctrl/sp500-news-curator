@@ -1,4 +1,4 @@
-﻿import { useQuery } from '@tanstack/react-query'
+import { useQuery } from '@tanstack/react-query'
 import { fetchIndicators } from '../api/client'
 
 const LABELS: Record<string, string> = {
@@ -17,7 +17,11 @@ const FORMAT: Record<string, (v: number) => string> = {
   gdp: (v) => v.toFixed(1) + '%',
 }
 
-export default function IndicatorsWidget() {
+interface Props {
+  className?: string
+}
+
+export default function IndicatorsWidget({ className }: Props) {
   const query = useQuery({
     queryKey: ['indicators'],
     queryFn: () => fetchIndicators('cpi,nonfarm_payrolls,unemployment_rate,fed_funds_rate,gdp', 90),
@@ -27,8 +31,7 @@ export default function IndicatorsWidget() {
   const indicators = query.data?.indicators ?? {}
 
   return (
-    <div className="bg-white rounded-lg shadow p-4">
-      <h2 className="text-lg font-semibold mb-3">Economic Indicators</h2>
+    <div className={className}>
       {query.isLoading && <p className="text-gray-400 text-sm">Loading...</p>}
       {Object.keys(indicators).length === 0 && !query.isLoading && (
         <p className="text-gray-400 text-sm">No indicator data yet</p>
@@ -48,7 +51,7 @@ export default function IndicatorsWidget() {
                   <span className="font-mono font-semibold">{FORMAT[name] ? FORMAT[name](latest.value) : latest.value}</span>
                   {prev && (
                     <span className={isPositive ? 'text-green-600 text-xs ml-2' : 'text-red-600 text-xs ml-2'}>
-                      {isPositive ? '▲' : '▼'} {FORMAT[name] ? FORMAT[name](Math.abs(diff)) : ''}
+                      {isPositive ? '\u25b2' : '\u25bc'} {FORMAT[name] ? FORMAT[name](Math.abs(diff)) : ''}
                     </span>
                   )}
                 </div>

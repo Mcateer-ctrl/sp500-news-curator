@@ -7,7 +7,11 @@ const INSTITUTION_LABELS: Record<string, string> = {
   BLK: 'BlackRock',
 }
 
-export default function WhalesPanel() {
+interface Props {
+  className?: string
+}
+
+export default function WhalesPanel({ className }: Props) {
   const query = useQuery({
     queryKey: ['13f-filings'],
     queryFn: () => fetchThirteenFFilings({ days: 90 }),
@@ -17,7 +21,7 @@ export default function WhalesPanel() {
   const filings = query.data?.filings ?? []
 
   return (
-    <div className="bg-white rounded-lg shadow p-4">
+    <div className={className}>
       <h2 className="text-lg font-semibold mb-3">Whale Watching (13F)</h2>
       {query.isLoading && <p className="text-gray-400 text-sm">Loading...</p>}
       {filings.length === 0 && !query.isLoading && (

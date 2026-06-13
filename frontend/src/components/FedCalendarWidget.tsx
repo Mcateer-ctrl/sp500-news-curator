@@ -1,7 +1,11 @@
-﻿import { useQuery } from '@tanstack/react-query'
+import { useQuery } from '@tanstack/react-query'
 import { fetchFedEvents } from '../api/client'
 
-export default function FedCalendarWidget() {
+interface Props {
+  className?: string
+}
+
+export default function FedCalendarWidget({ className }: Props) {
   const query = useQuery({
     queryKey: ['fed-events'],
     queryFn: () => fetchFedEvents(),
@@ -21,7 +25,7 @@ export default function FedCalendarWidget() {
   }
 
   return (
-    <div className="bg-white rounded-lg shadow p-4">
+    <div className={className}>
       <h2 className="text-lg font-semibold mb-3">Fed Calendar</h2>
       {query.isLoading && <p className="text-gray-400 text-sm">Loading...</p>}
       {events.length === 0 && !query.isLoading && (

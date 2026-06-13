@@ -3,9 +3,10 @@ import { fetchEarnings } from '../api/client'
 
 interface Props {
   tickers: string[]
+  className?: string
 }
 
-export default function EarningsWidget({ tickers }: Props) {
+export default function EarningsWidget({ tickers, className }: Props) {
   const query = useQuery({
     queryKey: ['earnings', tickers],
     queryFn: () => fetchEarnings({ upcoming: true, days: 14 }),
@@ -15,8 +16,7 @@ export default function EarningsWidget({ tickers }: Props) {
   const earnings = query.data?.earnings ?? []
 
   return (
-    <div className="bg-white rounded-lg shadow p-4">
-      <h2 className="text-lg font-semibold mb-3">Upcoming Earnings</h2>
+    <div className={className}>
       {query.isLoading && <p className="text-gray-400 text-sm">Loading...</p>}
       {earnings.length === 0 && !query.isLoading && (
         <p className="text-gray-400 text-sm">No upcoming earnings for watched tickers</p>
