@@ -1,4 +1,5 @@
-import { useState } from 'react'
+﻿import { useState } from 'react'
+import Card from './Card'
 
 interface TickerFilterProps {
   onTickerSelect: (ticker: string | null) => void
@@ -14,20 +15,20 @@ export default function TickerFilter({ onTickerSelect, selectedTicker, available
   )
 
   return (
-    <div className="bg-white rounded-lg shadow p-4">
+    <Card padding="default" hover={false}>
       <h2 className="text-lg font-semibold mb-3">Filter by Ticker</h2>
       <input
         type="text"
         value={search}
         onChange={(e) => setSearch(e.target.value)}
         placeholder="Search tickers..."
-        className="border rounded px-2 py-1 text-sm w-full mb-3"
+        className="w-full border border-stone-200 rounded-lg px-3 py-2 text-sm bg-surface-alt placeholder:text-stone-400 focus:outline-none focus:ring-2 focus:ring-accent/20 focus:border-accent"
       />
-      <div className="space-y-1 max-h-64 overflow-y-auto">
+      <div className="space-y-1 max-h-64 overflow-y-auto mt-3">
         <button
           onClick={() => onTickerSelect(null)}
-          className={`block w-full text-left px-2 py-1 rounded text-sm ${
-            !selectedTicker ? 'bg-blue-50 font-semibold text-blue-700' : 'hover:bg-gray-50'
+          className={`block w-full text-left px-2 py-1 rounded text-[0.8125rem] ${
+            !selectedTicker ? 'text-accent bg-accent-light font-semibold' : 'text-stone-600 hover:bg-surface-hover'
           }`}
         >
           All Tickers
@@ -36,14 +37,14 @@ export default function TickerFilter({ onTickerSelect, selectedTicker, available
           <button
             key={ticker}
             onClick={() => onTickerSelect(ticker)}
-            className={`block w-full text-left px-2 py-1 rounded text-sm font-mono ${
-              selectedTicker === ticker ? 'bg-blue-50 font-semibold text-blue-700' : 'hover:bg-gray-50'
+            className={`block w-full text-left px-2 py-1 rounded text-[0.8125rem] font-mono ${
+              selectedTicker === ticker ? 'text-accent bg-accent-light font-semibold' : 'text-stone-600 hover:bg-surface-hover'
             }`}
           >
             {ticker}
           </button>
         ))}
       </div>
-    </div>
+    </Card>
   )
 }
