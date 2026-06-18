@@ -120,15 +120,15 @@ export default function SentimentChart({ selectedTicker }: SentimentChartProps) 
               <div className="flex h-1.5 rounded-full overflow-hidden bg-stone-100">
                 <div
                   className="bg-emerald-500 rounded-full"
-                  style={{ width: ${bullPct}% }}
+                  style={{ width: `${bullPct}%` }}
                 />
                 <div
                   className="bg-red-500 rounded-full"
-                  style={{ width: ${bearPct}% }}
+                  style={{ width: `${bearPct}%` }}
                 />
                 <div
                   className="bg-stone-200 rounded-full"
-                  style={{ width: ${neutralPct}% }}
+                  style={{ width: `${neutralPct}%` }}
                 />
               </div>
             </div>
